@@ -2,15 +2,26 @@
 const inquirer = require("inquirer");
 const express = require("express");
 const { Pool } = require("pg");
-const PORT = process.env.PORT || 3001;
+// const PORT = process.env.PORT || 3001; // Not sure if I need this for this assessment, testing with const PORT = 3001;
+
+// Importing the feedback router
+const api = require("./routes/index");
+
+const PORT = 3001;
+
 const app = express();
 
+// The express middleware
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+// We want to send all api pathed requests to the index.js file in routes and handled by the index modules
+app.use("/api", api);
+
+// Pool pg connection to database
 const pool = new Pool(
   {
-    user: "postgres", // Need to enter your own user and password for this to work
+    user: "postgres",
     password: "postgres",
     host: "localhost",
     database: "employee_management_db",
@@ -18,12 +29,13 @@ const pool = new Pool(
   console.log(`Connected to the employee_management_database!`)
 );
 
+// More connection to database using pool
 pool.connect();
 
+// Main menu Inquirer prompts
 const prompts = [
   {
     type: "list",
-    // prefix: "(Use arrow keys)",
     message: "What would you like to do?",
     name: "options",
     choices: [
@@ -39,6 +51,7 @@ const prompts = [
   },
 ];
 
+// Separate prompt array for creating employees
 const addEmployeePrompt = [
   {
     message: "What is the employee's first name?",
@@ -49,15 +62,19 @@ const addEmployeePrompt = [
     name: "lastName",
   },
   {
-    message: "What is the employee's role ID?",
-    name: "roleID",
+    type: "list",
+    message: "What is the employee's role?",
+    name: "roleName",
+    // NEED TO FIGURE OUT HOW TO USE FETCHED DATA AS CHOICE ARRAY IN INQUIRER PROMPT
+    choices: "fetchRoles();",
   },
   {
-    message: "What is the employee's manager ID?",
-    name: "managerID",
+    message: "Who is the employee's manager?",
+    name: "managerName",
   },
 ];
 
+// DRAFT OF UPDATE EMPLOYEE INQUIRER PROMPT
 // const updateEmployeePrompt = [
 //   {
 //     type: "list",
@@ -72,10 +89,7 @@ const addEmployeePrompt = [
 //   },
 // ];
 
-// pool.query("SELECT * FROM employee", function (err, { rows }) {
-//   console.log(rows);
-// });
-
+// Function with Inquirer prompts
 function promptUser() {
   inquirer.prompt(prompts).then((response) => {
     switch (response.options) {
@@ -107,37 +121,37 @@ function promptUser() {
   });
 }
 
-function viewAllEmployees() {
-  // Why doesn't it display as a table? Do I have to do that? found console.table which auto formats.
-  pool.query(
-    "SELECT employee.first_name AS 'First Name', employee.last_name AS 'Last Name', FROM employee JOIN role ON employee.role_id = role.id",
-    function (err, ) => {
-      if (err) {
-        console.log(err);
-      }
-      else {
-      console.table(rows);
-      }
-    }
-  );
-}
-
-function addEmployee() {
-  inquirer.prompt(addEmployeePrompt).then((response) => {
-    pool.query(
-      "INSERT INTO employee (first_name, last_name, role_ID, manager_ID) VALUES ($1, $2, $3, $4)",
-      [
-        response.firstName,
-        response.lastName,
-        response.roleID,
-        response.managerID,
-      ],
-      console.table(rows)
-    );
-  });
-}
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
 
 promptUser();
+
+// FOR THIS PROJECT WE HAVE TO USE EXPRESS REQUESTS
+// app.get('/api/employees', (req, res) => {
+//     res.json(pool.query())
+// };
+
+// function viewAllRoles() {
+//   pool.query(
+//     `SELECT
+//       role.title as "Role",
+//       role.salary as "Salary",
+//     FROM
+//       employee
+//     JOIN
+//       role ON employee.role_id = role.id
+//     JOIN
+//       department ON role.department_id = department.id`,
+//     function (err, { rows }) {
+//       console.table(rows);
+//     }
+//   );
+// }
+
+//
+//   BELOW IS PRACTISE, EARLY DRAFTS
+//
 
 // app.listen(PORT, () => {
 //   console.log(`Server running on port ${PORT}`);

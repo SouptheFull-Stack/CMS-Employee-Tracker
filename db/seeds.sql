@@ -1,3 +1,5 @@
+\c employee_management_db;
+
 INSERT INTO department (name)
     VALUES 
         ('Management'),
