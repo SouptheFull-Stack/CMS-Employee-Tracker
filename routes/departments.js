@@ -1,7 +1,7 @@
-const dep = require("express").Router();
+const express = require("express").Router();
 
 function viewAllDepartments() {
-  dep.get("/api/departments", (req, res) => {
+  express.get("/api/departments", (req, res) => {
     pool.query(
       `SELECT 
           department.id as "ID",
@@ -23,4 +23,4 @@ function viewAllDepartments() {
 
 function addDepartment() {}
 
-module.exports = dep;
+module.exports = Department;
