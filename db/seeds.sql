@@ -26,14 +26,16 @@ INSERT INTO role (title, salary, department_id)
 
 INSERT INTO employee (first_name, last_name, role_id, manager_id) -- manager_id refers to the one manager of every employee in this context
     VALUES
-        ('Sammy', 'Hinklebutt', 1, null),  
-        ('Mitra', 'Whineyhat', 2, 1),
-        ('Jacob', 'HappyCuy', 3, 1),
-        ('Jack', 'Bog', 4, null),
-        ('Matt', 'Bob', 5, null),
-        ('Bailey', 'Bingo', 6, null),
+        ('Sammy', 'Hinken', 1, null),  
+        ('Mitra', 'Whinelhat', 2, 1),
+        ('Jacob', 'Hupping', 3, 1),
+        ('Jack', 'Bolt', 4, null),
+        ('Matt', 'Bob', 5, 1),
+        ('Bailey', 'Bingo', 6, 1),
         ('Liam', 'Trin', 7, 4),
-        ('Poopy', 'Pinky', 8, 5);
+        ('Linh', 'Ley', 8, 4),
+        ('Chad', 'Lourdy', 9, 4),
+        ('Tim', 'Tobin', 10, 1);
         
 
 
